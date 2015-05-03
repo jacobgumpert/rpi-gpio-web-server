@@ -103,6 +103,8 @@
             // loading... this is intentional!
             this.options.checked = !this.options.checked;
             this._toggleSwitch();
+
+
         },
 
         _refresh: function() {
@@ -226,7 +228,11 @@
 
         _setOption: function(key, value) {
             if (key === "checked") {
-                this._setChecked(value);
+                this._setChecked(value, true);
+                return;
+            }
+            if (key === "update") {
+                this._setChecked(value, false);
                 return;
             }
 
@@ -234,16 +240,19 @@
             this._refresh();
         },
 
-        _setChecked: function(value) {
+        _setChecked: function(value, shouldRunCallBack) {
             if (value === this.options.checked) {
                 return;
             }
 
             this.options.checked = !value;
-            this._toggleSwitch();
+            this._toggleSwitch(shouldRunCallBack);
         },
 
-        _toggleSwitch: function() {
+        _toggleSwitch: function(shouldRunCallBack) {
+            if(shouldRunCallBack == undefined){
+                shouldRunCallBack = true;
+            }
             this.options.checked = !this.options.checked;
             var newLeft = "";
             if (this.options.checked) {
@@ -267,7 +276,7 @@
                 }
                 this.button_bg.addClass("checked");
                 //execute on state callback if its supplied
-                if(typeof this.options.on_callback === 'function') this.options.on_callback.call(this);
+                if(typeof this.options.on_callback === 'function' && shouldRunCallBack) this.options.on_callback.call(this);
             }
             else {
                 // Update the underlying checkbox state
@@ -288,7 +297,7 @@
                 }
                 this.button_bg.removeClass("checked");
                 //execute off state callback if its supplied
-                if(typeof this.options.off_callback === 'function') this.options.off_callback.call(this);
+                if(typeof this.options.off_callback === 'function' && shouldRunCallBack) this.options.off_callback.call(this);
             }
             // Animate the switch
             this.button.animate({ left: newLeft }, 250, "easeInOutCubic");
