@@ -1,14 +1,23 @@
-function callServer(){
+function callServer(indata){
+	if(typeof(indata) == 'undefined'){
+		indata = {A: 'a', B: 'b'};
+	}
+	var genericResponseFunction = function (data, response) {
+		if (response === 'success') {
+			console.log('Success: ')
+		}
+		else {
+			console.log('Error: ')
+		}
+		console.log(data)
+	}
+
 	$.ajax({
 		url: "/data",
 		dataType: "json",
-		success: function (msg) {
-			console.log('success: ' + msg)
-		},
-		error: function (msg) {
-			console.log('error: ' + msg)
-		},
-		data: {A: 'a', B: 'b'}
+		success: genericResponseFunction,
+		error: genericResponseFunction,
+		data: indata
 		});
 }
 
