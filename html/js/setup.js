@@ -1,3 +1,29 @@
+function get_status(channels, callback){
+	// channels = '3,4'
+	url = '/gpio'
+	indata = {action: 'get', channels: channels}
+
+	var genericResponseFunction = function (data, response){
+	if (response === 'success') {
+			console.log('Success: ')
+		}
+		else {
+			console.log('Error: ')
+		}
+		console.log(data);
+	}
+
+	$.ajax({
+		url: url,
+		dataType: "json",
+		success: genericResponseFunction,
+		error: genericResponseFunction,
+		data: indata
+	});
+
+}
+
+
 function callServer(indata){
 	if(typeof(indata) == 'undefined'){
 		indata = {A: 'a', B: 'b'};
@@ -23,6 +49,7 @@ function callServer(indata){
 
 $(function() {
 	var initDone = false;
+
   $('#slider-1 input').switchButton({
   	checked: undefined,
 		on_label:"Enabled",
@@ -46,11 +73,6 @@ $(function() {
 		}
   });
 
-  $('#slider-3 input').switchButton({
-  	on_label:"Enable Visual Confirmation",
-		off_label:"Disable",
-		labels_placement: "both"
-  });
 
 	var initDone = true;
   
