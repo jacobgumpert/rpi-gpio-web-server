@@ -1,16 +1,19 @@
 import logging
 class CGI_handler():
     def __init__(self):
-        self.register = {}
+        self._register = {}
 
-    def register(self, path, callBack):
-        self.register[path] = callBack
+    def registerCallBack(self, path, callBack):
+        self._register[path] = callBack
 
     def callCGI(self, path, data):
         try:
-            self.register[path](data)
+            resp = self._register[path](data)
+            logging.error('Found cgi: %s'%(path))
+            return  resp
         except:
             logging.error('Could not find cgi')
+            return False
 
     def getName(self):
         return "CGI_handler"

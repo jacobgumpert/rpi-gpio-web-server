@@ -21,15 +21,16 @@ class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             data_string = path_list[1]
             in_d = cgi.parse_qs(data_string)
 
-            g_CGIHandler.callCGI(cgi_string, data_string)
+            message = g_CGIHandler.callCGI(cgi_string, in_d)
 
-            out_d = {}
-            for key in in_d:
-                out_d[key] = 'aa' + ''.join(in_d[key])
+            if not message:
+                message = '{ "msg": "Could Not find cgi"}'
+                response = 400
 
-            message = json.dumps(out_d)
-            print(message)
-            response = 200
+            else:
+                response = 200
+                message = json.dumps(message)
+            logging.error("response msg: %s (%d)"%(message, response))
 
         else:
             message =  threading.currentThread().getName()
@@ -78,11 +79,13 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
 
 
+def createServer(host, port):
+    server = ThreadedHTTPServer((host, port), Handler)
+    print 'Starting server, use <Ctrl-C> to stop'
+    server.serve_forever()
+    return server
 
 
 if __name__ == '__main__':
     PORT = 8000
-    server = ThreadedHTTPServer(('localhost', PORT), Handler)
-    print 'Starting server, use <Ctrl-C> to stop'
-    server.serve_forever()
-
+    createServer('localhost', PORT)

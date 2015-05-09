@@ -9,11 +9,11 @@ class DEMO_cgi():
         self.register_cgi()
 
     def print_data(self, data):
-            print json.dumps(data, indent = 4)
+        print json.dumps(data, indent = 4)
+        return {'msg':'demo_cgi'}
 
 
     def register_cgi(self):
-        print g_CGIHandler.getName()
-        g_CGIHandler.register( self.name, self.print_data)
+        g_CGIHandler.registerCallBack( self.name, self.print_data)
 
 
