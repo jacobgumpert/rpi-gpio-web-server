@@ -10,6 +10,6 @@ if __name__ == '__main__':
     PORT = 8000
     try:
         import RPi.GPIO as GPIO
-        server = myExtendedSimpleServer.createServer('192.168.1.72', PORT)
+        server = myExtendedSimpleServer.createServer('0.0.0.0', PORT)
     except:
         server = myExtendedSimpleServer.createServer('localhost', PORT)
